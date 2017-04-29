@@ -5,46 +5,64 @@
         <title>Montecarlo simulation of bushfire risk</title>
         <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
-
         <!--  JS -->
     </head>
-    <body>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-10 col-md-offset-1">
+        <body>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
 
-            <div class="page-header">
-              <h1>Bushfire Simulator</h1>
-              <h3>A simulation on landsat 8 data from NASA</h3>
-            </div>
-            <div class="buttons-group">
-              <button id="start" type="button">Start</button>
-              <button id="stop" type="button">Stop</button>
-              <button id="next" type="button">next</button>
-              <button id="reset" type="button">reset</button>
-            </div>
-              <canvas id="myCanvas"></canvas>
-              <div class="description">
-              This simulation
+                <div class="page-header">
+                  <h1>Bushfire Simulator</h1>
+                  <h3>A simulation on landsat 8 data from NASA</h3>
+                </div>
+                <div class="buttons-group">
+                  <button id="start" type="button">Start</button>
+                  <button id="stop" type="button">Stop</button>
+                  <button id="next" type="button">next</button>
+                  <button id="reset" type="button">reset</button>
+                  <div><label>Hours: </label><span id="tick">0</span></div>
+                </div>
+
+                <div id="canvases">
+                    <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
+                    <style media="screen">
+                        .layer1 {z-index: 1;}
+                        .layer2 {z-index: 2; opacity: 0.5}
+                        .layer3 {z-index: 3}
+                        .layer4 {z-index: 4}
+                        .layer5 {z-index: 5}
+                        .overlay {position:absolute}
+                        .overlay {    width: 50%; opacity:0   }
+                    </style>
+                    <canvas id="map" class="layer1 overlay"></canvas>
+                    <canvas id="fuel" class="layer2 overlay"></canvas>
+                    <canvas id="ash" class="layer3 overlay"></canvas>
+                    <canvas id="fire" class="layer4 overlay"></canvas>
+                    <canvas id="elevation" class="layer5 overlay"></canvas>
+                </div>
+
+                <div style="width:100%; height:500px"  id="leaflet-map">
+
+                </div>
+
+                </div>
               </div>
-
             </div>
-          </div>
-        </div>
-    </body>
+        </body>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
 
-    <!-- jstat -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/random-js/1.0.8/random.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.6/chance.min.js"></script> -->
-    <script src="https://d3js.org/d3-random.v1.js"></script>
+    <!-- mapping -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css">
+    <script src="https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
 
-    <!-- We need matricies with convolution and reshape -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.12.1/math.min.js"></script> -->
-
-    <!-- nj.image.read doesn't work -->
+    <!-- We need matrices with convolution and reshape methods -->
+    <script src="https://rawgit.com/waylonflinn/weblas/master/dist/weblas.js"></script>
     <script src="https://rawgit.com/nicolaspanel/numjs/893016ec40e62eaaa126e1024dbe250aafb3014b/dist/numjs.js"></script>
 
 
@@ -52,22 +70,36 @@
 class Simulation {
     constructor(canvas,data) {
         this.canvas=canvas
-        this.W = canvas.width = data.fuel.shape[0]
-        this.H = canvas.height = data.fuel.shape[1]
+        this.H = canvas.height = data.fuel.shape[0]
+        this.W = canvas.width = data.fuel.shape[1]
         this.clock = 0;
-
-        // this.data = nj.zeros([this.W,this.H,4]) // fire,fuel, ash, alpha
 
         data.fuel =  data.fuel.reshape([data.fuel.shape[0],data.fuel.shape[1],1])
         data.fire = nj.zeros(data.fuel.shape)
         data.ash = nj.zeros(data.fuel.shape)
-        data.alpha = nj.ones(data.fuel.shape)
-        this.data = nj.concatenate([data.fire,data.fuel,data.ash,data.alpha])
+        data.elev = data.elev.reshape([data.elev.shape[0],data.elev.shape[1],1])
+        this.data = nj.concatenate([data.fire,data.fuel,data.ash,data.elev])
+
+        var coords = this.ignite()
+        this.display();
+    }
+
+    /* set an initial fire */
+    ignite(e){
+        // TODO make click to ignore work with zooming
+        var canvas = this.canvas
 
         // initial point away from walls
-        // we will make a nice bright cross
-        var x = _.round(d3.randomUniform(20, this.W-20)())
-        var y = _.round(d3.randomUniform(20, this.H-20)())
+        // we will make a nice bright cross so it's visible
+        var x,y
+        if (e){
+            // get click location FIXME might not work on all browsers
+            y=_.round(e.layerX/this.canvas.offsetWidth*this.canvas.width)
+            x=_.round(e.layerY/this.canvas.offsetHeight*this.canvas.height)
+        } else {
+            x = _.round(d3.randomUniform(20, this.W-20)())
+            y = _.round(d3.randomUniform(20, this.H-20)())
+        }
         console.log('fire',x,y)
         this.data.set(x,y,0,1)
         this.data.set(x-1,y-1,0,0.3)
@@ -75,130 +107,199 @@ class Simulation {
         this.data.set(x-1,y+1,0,0.3)
         this.data.set(x+1,y+1,0,0.3)
         this.data.set(x,y,1,0.3)
-
-        this.display();
+        this.display()
+        return [x,y]
     }
+
+    /* advance model by one tick */
     tick(){
         // PARAMS TODO move them
         var fuelMultipler = 5 // how many turns it burns for
         var fireMultiplier = 1
+        var fireGrowth = 1.5
+        var transmissionChance = 0.3
+
+        // distance to diagonal tiles as a ratio to tile size np.sqrt(1**2+1**2)
+        var diagDist = 1.42
 
         // tick the environment
         this.clock++;
-        if (this.clock>100) return 0;
+        var t0 = new Date().getTime()
+        document.getElementById('tick').innerText=this.clock
+        if (this.clock>1000) return 0;
         console.log('tick',this.clock)
+        //
+        // we are modifying the data in place, so freeze a copy of the old data
+        var oldData = this.data.clone()
 
-        // I could do nearby fires as a convoluton, but lets wait to include elevation diff
-        var all_fires = this.data.slice(null,null,[0,1]).clone()
-        // var filter = nj.array([0.5,1,0.5,1,0,1,0.5,1,0.5]).reshape(3,3,1)
-        // var nearby_fires = nj.convolve(all_fires,filter)
-        // console.log('max',nearby_fires.max())
-
-        var new_fires = []
-
+        /**
+         * Equations: transmission_probability from a nearby tile:
+         *  $ t = I * Rt$ where I is fire intensity and Rt is the slope term
+         *  $ Rt = exp(0.069 theta) $ theta is the slope angle from -90 to 90 degrees
+         *  this reflects that its hard for fire to spread downhill
+         *  $ theta = atan(dh/w) $ where dh is the difference in height and w is width
+         *  $ theta ~= dh/w $ using the small tan approximation
+         *
+         *  giving the total equation
+         *  $ t = I * exp(0.069 *dh/w) $
+         *
+         * (from Noble et al 1980, DOI: 10.1111/j.1442-9993.1980.tb01243.x)
+         */
         var fires=0
         for (var x = 1; x < this.W-1; x++) {
             for (var y = 1; y < this.H-1; y++) {
                 // can we do this as a convolution?
-                var fire = this.data.get(x,y,0)*fireMultiplier
-                var fuel = this.data.get(x,y,1)*fuelMultipler
-                var ash = this.data.get(x,y,2)
+                var fire = oldData.get(x,y,0)*fireMultiplier
+                var fuel = oldData.get(x,y,1)*fuelMultipler
+                var ash = oldData.get(x,y,2)
 
+                var transmissionProbability = 0
                 if (fuel==0) continue
 
                 ash += fire // fire from last turn causes ash to build up
                 fuel = _.clamp(fuel-fire,0,fuelMultipler) // and fuel to decrease
                 if (fire>0){
-                    fire*=2 // exponentially grow within pixel
+                    fire*=fireGrowth // exponentially grow within pixel
                 } else {
                     // each neighbouring tile might light it
-                    //
-                    // TODO it spreads right because new updates effects the next cell, fix this
 
-                    // TODO include slope or elevation differences
-                    var fires_adajacent = [
-                        this.data.get(x-1,y,0),
-                        this.data.get(x,y+1,0),
-                        this.data.get(x+1,y,0),
-                        this.data.get(x,y-1,0),
-                    ]
-                    var fires_diagonal = [
-                        this.data.get(x-1,y-1,0),
-                        this.data.get(x+1,y+1,0),
-                        this.data.get(x+1,y-1,0),
-                        this.data.get(x-1,y+1,0),
-                    ]
-                    var nearby_fires = (_.sum(fires_adajacent)+_.sum(fires_diagonal)/2)/8
-                    if (nearby_fires==0) continue
+                    // intensity of fires in nearby cells
+                    var fires_nearby = oldData.slice([x-1,x+2],[y-1,y+2],[0,1]).reshape(3,3)
+                    // account for diagonal and zero the middle
+                    if (fires_nearby.sum()==0) continue
+                    var width_inv = nj.array([
+                        [1/diagDist,1,      1/diagDist  ],
+                        [1,         1e-7,   1           ],
+                        [diagDist,  1,      1/diagDist  ]
+                    ])
+                    var intensity = nj.multiply(fires_nearby,width_inv)
+
+
+                    // Slope spreading term                    //
+                    // get difference in height ( height is in pixel width units)
+                    var height = oldData.slice([x-1,x+2],[y-1,y+2],[3,4]).reshape(3,3)
+                    var h0 = oldData.get(x,y,3)
+                    var dHeight = nj.subtract(height,h0)
+                    var Rt = nj.exp(nj.multiply(dHeight,width_inv).multiply(0.069))
+
+                    transmissionProbability = nj.multiply(intensity,Rt)
+                    transmissionProbability = transmissionProbability.mean()
 
                     // neighbouring tiles have a chance of lighting our tile
-                    if (nearby_fires<Math.random()) nearby_fires=0
+                    console.assert(transmissionProbability<=1)
+                    if ((transmissionProbability*(fuel**2)*transmissionChance)<Math.random()) {
+                        // nearby_fires=0
+                        continue
+                    }
                 }
                 // clamp between 0 and fuel remaining.
-                fire =  _.clamp((fire+nearby_fires),0,_.min([1,fuel]))
+                fire =  _.clamp((fire+transmissionProbability),0,_.min([1,fuel/fuelMultipler]))
                 // round it so we don't deal with tiny fractions
                 fire = _.round(fire,2)
 
                 console.assert(fire!=undefined)
+                console.assert(fire!=null)
                 console.assert(fuel!=undefined)
-                console.assert(ash!=undefined)
 
-                all_fires.set(x,y,0,fire/fireMultiplier)
+                this.data.set(x,y,0,fire/fireMultiplier)
                 this.data.set(x,y,1,fuel/fuelMultipler)
                 this.data.set(x,y,2,ash)
-                if (fire>0){
-                    fires+=fire
-                //     console.debug('fire',x,y,fire,fuel,ash)
-                }
             }
         }
 
-        // set all the new fires
-        for (var x = 1; x < this.W-1; x++) {
-            for (var y = 1; y < this.H-1; y++) {
-                this.data.set(x,y,0,all_fires.get(x,y,0))
-            }
-        }
-
-        console.log('tick',this.clock,'change',fires)
-        return fires
+        var t = new Date().getTime()-t0
+        console.log('tick',this.clock,'time',t)
+        return t
 
 
     }
+
+    /** push data onto canvases */
     display(){
-        var H = this.canvas.height;
-        var W = this.canvas.width;
-        var ctx = this.canvas.getContext('2d');
+        var H = this.W;
+        var W = this.H;
+
+        // first show fire
+
+        // Fill in the fire layer
+        var canvas = document.getElementById('fire')
+        var ctx = canvas.getContext('2d');
         var imageData = ctx.getImageData(0,0,H,W)
-        console.assert(this.data.selection.data.length==imageData.data.length)
-
-        // for (var x = 1; x < this.W-1; x++) {
-        //     for (var y = 1; y < this.H-1; y++) {
-        //         // mix the data into colors
-        //         var cell = this.data.slice([0,1],[0,1],null).reshape(1,4)
-        //         var filter = nj.array([
-        //             [1,0,0,0],
-        //             [0,1,0,0],
-        //             [0,0,1,0],
-        //             [0,0,0,1] // r,g,b,a
-        //         ]).reshape(4,4)
-        //         var colors = nj.dot(cell,filter)
-        //
-        //         // now set imageData
-        //         for (var i = 0; i < 4; i++) {
-        //             imageData.data[i + this.W *(x + 4*z)]=colors.selection.data[i]*255.0
-        //         }
-        //     }
-        // }
-
-        // set the data with fire,fuel,ash as red,green,blue
-        for (var i = 0; i < imageData.data.length; i++) {
-            imageData.data[i]=this.data.selection.data[i]*255.0
+        var color_scale = d3.interpolateLab('yellow','red')
+        var fire = this.data.slice(null,null,[0,1])
+        for (var x = 0; x < imageData.width; x++) {
+            for (var y = 0; y < imageData.height; y++) {
+                var d = fire.get(x,y,0)*2
+                var c = new d3.color(color_scale(d))
+                var i = (x*H+y)*4
+                imageData.data[i+0]=c.r
+                imageData.data[i+1]=c.g
+                imageData.data[i+2]=c.b
+                imageData.data[i+3]=_.clamp(d*255*2,0,255)
+            }
         }
         ctx.putImageData(imageData, 0, 0);
+        console.assert(this.data.selection.data.length==imageData.data.length)
+
+        // Fill in the fire layer
+        var canvas = document.getElementById('fuel')
+        var ctx = canvas.getContext('2d');
+        var imageData = ctx.getImageData(0,0,H,W)
+        var color_scale = d3.interpolateLab('white','green')
+        var fuel = this.data.slice(null,null,[1,2])
+        for (var x = 0; x < imageData.width; x++) {
+            for (var y = 0; y < imageData.height; y++) {
+                var d = fuel.get(x,y,0)*2
+                var c = new d3.color(color_scale(d))
+                var i = (x*H+y)*4
+                imageData.data[i+0]=c.r
+                imageData.data[i+1]=c.g
+                imageData.data[i+2]=c.b
+                imageData.data[i+3]=_.clamp(d*255*2,0,255)
+            }
+        }
+        ctx.putImageData(imageData, 0, 0);
+        console.assert(this.data.selection.data.length==imageData.data.length)
+
+
+        // Fill in the ash layer
+        var canvas = document.getElementById('ash')
+        var ctx = canvas.getContext('2d');
+        var imageData = ctx.getImageData(0,0,H,W)
+        var color_scale = d3.interpolateLab('white','grey')
+        var ash = this.data.slice(null,null,[2,3])
+        for (var x = 0; x < imageData.width; x++) {
+            for (var y = 0; y < imageData.height; y++) {
+                var d = ash.get(x,y,0)*2
+                var c = new d3.color(color_scale(d))
+                var i = (x*H+y)*4
+                imageData.data[i+0]=c.r
+                imageData.data[i+1]=c.g
+                imageData.data[i+2]=c.b
+                imageData.data[i+3]=_.clamp(d*255*2,0,255)
+            }
+        }
+        ctx.putImageData(imageData, 0, 0);
+        console.assert(this.data.selection.data.length==imageData.data.length)
 
     }
-    start(n=10000){
+    /** this returns stats **/
+    stats(){
+        var fire = this.data.slice(null,null,[0,1])
+        var burning_cells = 0
+        for (var x = 1; x < this.W-1; x++) {
+            for (var y = 1; y < this.H-1; y++) {
+                if (fire.get(x,y,0)!=0) burning_cells++
+            }
+        }
+        return {
+            fire: _.round(fire.sum(),2),
+            fuel: _.round(this.data.slice(null,null,[1,2]).sum(),2),
+            ash: _.round(this.data.slice(null,null,[2,3]).sum(),2),
+            burning_cells:burning_cells
+        }
+    }
+    start(n=5000){
         this.stop()
         this.loop = setInterval(()=>{
             this.tick()
@@ -212,11 +313,18 @@ class Simulation {
 
 
 </script>
+<style media="screen">
+    .leaflet-image-layer {
+        image-rendering: pixelated
+    }
+</style>
+    <script src="images/X145.34083_Y-37.533_DT20170428-042328_3857_30/metadata.js"></script>
     <script type="text/javascript">
     // parameters
     var simulations = 2
-    var fuel_src = 'images/X145.34083_Y-37.533_DT20170427-093030_3857_30/2017.EVI.png'
-    var elevation_src = 'images/X145.34083_Y-37.533_DT20170427-093030_3857_30/NSW.elevation.png'
+    var fuel_src = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/2017.EVI.png'
+    var elevation_src = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/SRTMGL1_003.elevation_pixel_units.png'
+    var visual = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/visual.png'
 
     /**
      * Load png images as an array pf [r,g,b,a,r1,g1,b1,a1,...]
@@ -232,12 +340,6 @@ class Simulation {
                 // load using numpyjs
                 var data = nj.images.read(img)
 
-                // convert to float 32?
-                data.dtype="float32"
-                for (var i = 0; i < data.selection.data.length; i++) {
-                    data.selection.data[i]/=255
-                }
-
                 resolve(data)
             }
             img.onerror=reject
@@ -249,21 +351,114 @@ class Simulation {
 
     // load image into canvases
     window.onload = function() {
-        var canvas=document.getElementById('myCanvas');
+
+        /* leaflet setup */
+        var southWest = L.latLng(metadata.bounds[0][0],metadata.bounds[0][1]),
+        northEast = L.latLng(metadata.bounds[1][0],metadata.bounds[1][1]),
+        bounds = L.latLngBounds(southWest, northEast);
+
+        var canvas=document.getElementById('map');
+        // image_layer1.addTo(leafletMap);
+        var elevation_layer = new L.ImageOverlay(
+            canvas.toDataURL(),
+            bounds,
+            {opacity:0.5}
+        )
+        var fuel_layer = new L.ImageOverlay(
+            canvas.toDataURL(),
+            bounds,
+            {opacity:0.5,attribution:'based on NASA Landsat-8 satellite data'}
+        )
+        var ash_layer = new L.ImageOverlay(
+            canvas.toDataURL(),
+            bounds,
+            {opacity:0.5}
+        )
+        var fire_layer = new L.ImageOverlay(
+            canvas.toDataURL(),
+            bounds,
+            {opacity:0.5}
+        )
+        // image_layer1.addTo(leafletMap);
+        L.mapbox.accessToken = 'pk.eyJ1IjoiZGlnaXRhbGdsb2JlIiwiYSI6ImNpc2t0ZG16NzA2Y2QydW53M2s0c2liNncifQ.YzEK6kmdCrtvssUfrncwKQ';
+        var base = L.mapbox.tileLayer('digitalglobe.nal0g75k')
+
+
+        var leafletMap = L.map('leaflet-map',{
+            center:metadata.point,
+            zoom:15,
+            maxBounds:bounds,
+            // zoomControl: true,
+            maxZoom:16,
+            minZoom:4,
+            layers: [base,ash_layer,fire_layer]
+        })
+        baseLayers = {
+            'DigitalGlobe Maps API: Recent Imagery':base
+        }
+        var overlays = {
+            'fire_layer':fire_layer,
+            'ash_layer':ash_layer,
+            'fuel_layer':fuel_layer,
+            'elevation_layer':elevation_layer
+        }
+        L.control.layers(baseLayers, overlays, {collapsed: true}).addTo(leafletMap);
+        L.control.scale().addTo(leafletMap);
+        /* there is probobly a better way but this works for now **/
+        function updateLayers(){
+            // convert each canvas to a png and load as a map overlay
+            if (elevation_layer._image) elevation_layer.setUrl(document.getElementById('elevation').toDataURL())
+            if (fuel_layer._image) fuel_layer.setUrl(document.getElementById('fuel').toDataURL())
+            if (ash_layer._image) ash_layer.setUrl(document.getElementById('ash').toDataURL())
+            if (fire_layer._image) fire_layer.setUrl(document.getElementById('fire').toDataURL())
+            // fire_layer.bringToFront()
+        }
+        leafletMap.on('overlayadd',updateLayers)
+
+        /* start simulation */
+
+        // load elevation onto a canvas
+        var canvas=document.getElementById('elevation');
+        var im = new Image()
+        im.src=visual
+        im.onload=function(){
+            // set size of all canvases
+            document.getElementById('canvases').querySelectorAll('canvas').forEach((canvas)=>{
+                canvas.width=this.width
+                canvas.height=this.height
+            })
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(this, 0, 0);
+        }
+
+        var canvas=document.getElementById('fire');
         var prom = Promise.all([
             loadImage(fuel_src),
             loadImage(elevation_src),
+            loadImage(elevation_src),
         ]);
-        // prom.then(fuel=>console.log(fuel))
+
         prom.then(([fuel,elev]) => {
+
+            // convert to float 32?
+            fuel.dtype="float32"
+            fuel=fuel.multiply(1/255)
+
+            elev.dtype="float32"
+
+
+
+            // crop to smallest
+            var canvas=document.getElementById('fire');
+
             var simulation = new Simulation(
                 canvas,
                 {
-                    fuel:nj.images.rgb2gray(fuel),
-                    elev:nj.images.rgb2gray(elev),
+                    fuel:fuel,//nj.images.rgb2gray(fuel),
+                    elev:elev,//nj.images.rgb2gray(elev),
                 }
             );
-            // simulation.start(20000)
+
 
             // start simulation
 
@@ -285,7 +480,21 @@ class Simulation {
             document.getElementById('next').onclick=function(){
                 simulation.tick()
                 simulation.display()
+                console.log(simulation.stats())
+                updateLayers()
             }
+            document.getElementById('reset').onclick=function(){
+                simulation = new Simulation(
+                    canvas,
+                    {
+                        fuel:nj.images.rgb2gray(fuel),
+                        elev:nj.images.rgb2gray(elev),
+                    }
+                );
+                document.getElementById('tick').innterText="0"
+                updateLayers()
+            }
+            updateLayers()
         })
 
 
