@@ -5,12 +5,14 @@
         <title>Bushfire Simulator</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+
         <!--  JS -->
     </head>
         <body>
           <div class="container">
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-10 col-md-offset-2">
 
                 <div class="page-header">
                   <h1>Bushfire Simulator <small>A spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></small></h1>
@@ -19,6 +21,9 @@
             </div>
             <div class="row">
               <div class="col-md-3 col-md-offset-2">
+                <input type="text" class="location-input" value="Brigadoon, Western Australia 6069"/>
+              </div>
+              <div class="col-md-3">
                 <div class="buttons-group">
                   <button id="start" class="btn" type="button">Start</button>
                   <button id="stop" class="btn" type="button">Stop</button>
@@ -27,9 +32,6 @@
                   <!-- <div><label>Hours: </label><span id="tick">0</span></div> -->
 
                 </div>
-              </div>
-              <div class="col-md-3">
-                <input type="text" value="Brigadoon, Western Australia 6069"/>
               </div>
               <div class="col-md-3">
                   <form >
@@ -42,7 +44,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
@@ -54,27 +56,11 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
-        <div class="form-group">
-          <label for="humidity">Humidity</label>
-          <input type="text" class="form-control pull-right" id="humidity" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-       </div>
-       <div class="form-group">
-         <label for="precipitation">Precepitation</label>
-         <input type="text" class="form-control pull-right" id="precepitation" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <label for="temperature">Temperature</label>
-        <input type="text" class="form-control pull-right" id="temperature" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-     </div>
-     <div class="form-group">
-       <label for="windkm">Wind (km/h)</label>
-       <input type="text" class="form-control pull-right" id="windkm" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-      <label for="wind-direction">Wind (direction)</label>
-      <input type="text" class="form-control pull-right" id="wind-direction" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-   </div>
-
+        <select class="js-example-basic-single">
+          <option value="AL">Alabama</option>
+            ...
+          <option value="WY">Wyoming</option>
+        </select>
       </div>
     </div>
   </div>
@@ -90,15 +76,15 @@
       <div class="panel-body">
         <div class="form-group">
           <label for="trucks">Trucks</label>
-          <input type="text" class="form-control pull-right" id="trucks" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" placeholder="Enter email">
        </div>
        <div class="form-group">
          <label for="choppers">Choppers</label>
-         <input type="text" class="form-control pull-right" id="choppers" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+         <input type="text" class="sidebar-input pull-right" id="choppers"  aria-describedby="emailHelp" placeholder="Enter email">
       </div>
       <div class="form-group">
         <label for="roads-traffic">Roads/Traffic</label>
-        <input type="text" class="form-control pull-right" id="roads-traffic" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+        <input type="text" class="sidebar-input pull-right" id="roads-traffic"  aria-describedby="emailHelp" placeholder="Enter email">
      </div>
       </div>
     </div>
@@ -107,19 +93,38 @@
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Collapsible Group Item #3
+          Variables
         </a>
       </h4>
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <div class="form-group">
+          <label for="humidity">Humidity</label>
+          <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+           <label for="precipitation">Precepitation</label>
+           <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="temperature">Temperature</label>
+          <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="windkm">Wind (km/h)</label>
+          <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="wind-direction">Wind (direction)</label>
+          <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
       </div>
     </div>
   </div>
 </div>
               </div>
-              <div class="col-md-9">
+              <div class="col-md-10">
                 <div id="canvases">
                     <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
                     <style media="screen">
@@ -148,7 +153,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
-    <script src="./js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 
 
@@ -167,6 +172,10 @@
 
 
 <script type="text/javascript">
+
+  $(document).ready(function() {
+    $(".js-example-basic-single").select2();
+  });
 
 class Simulation {
     constructor(canvas,data) {

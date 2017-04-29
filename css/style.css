@@ -8,3 +8,23 @@
   border: none;
   width: 2em;
 }
+
+.btn {
+  padding: 2px 5px;
+}
+
+label {
+  font-size: 10px;
+  margin-left: -10px;
+}
+
+input.sidebar-input {
+  font-size: 10px;
+  width:30px;
+  display:inline;
+
+}
+
+.location-input {
+  width: 100%;
+}
