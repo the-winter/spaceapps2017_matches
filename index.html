@@ -227,18 +227,10 @@ class Simulation {
         // tick the environment
         this.clock++;
         var t0 = new Date().getTime()
-        document.getElementById('slider').value=this.clock/2
-        document.getElementById('slider-box').value=this.clock/2
-        // $(  document ).ready(function(){
-        //   $('.slider').slider().bind({
-        //       change: function() {
-        //          alert('change triggered');
-        //       }
-        //   });
-        //
-        //   $('.slider').trigger('change');
-        // });
-        if (this.clock>1000) return 0;
+        document.getElementById('slider').value=this.clock/10
+        document.getElementById('slider-box').value=this.clock/10
+
+        if (this.clock>100000) return 0;
         console.log('tick',this.clock)
         //
         // we are modifying the data in place, so freeze a copy of the old data
@@ -411,7 +403,7 @@ class Simulation {
             burning_cells:burning_cells
         }
     }
-    start(n=5000, callback){
+    start(n=2000, callback){
         this.stop()
         this.loop = setInterval(()=>{
             this.tick()
