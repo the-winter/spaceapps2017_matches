@@ -1,3 +1,10 @@
 #myCanvas {
   width: 100%;
 }
+
+/** Silder **/
+
+.hours-box {
+  border: none;
+  width: 2em;
+}

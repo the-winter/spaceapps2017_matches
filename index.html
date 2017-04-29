@@ -12,20 +12,105 @@
         <body>
           <div class="container">
             <div class="row">
-              <div class="col-md-10 col-md-offset-1">
+              <div class="col-md-10">
 
                 <div class="page-header">
                   <h1>Bushfire Simulator</h1>
                   <h3>A simulation on landsat 8 data from NASA</h3>
                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-md-offset-2">
                 <div class="buttons-group">
                   <button id="start" type="button">Start</button>
                   <button id="stop" type="button">Stop</button>
                   <button id="next" type="button">next</button>
                   <button id="reset" type="button">reset</button>
-                  <div><label>Hours: </label><span id="tick">0</span></div>
+                  <!-- <div><label>Hours: </label><span id="tick">0</span></div> -->
                 </div>
+              </div>
+              <div class="col-md-3">
+                <input type="text" value="type your location"/>
+              </div>
+              <div class="col-md-3">
+                  <form >
+                    <div>
+                      <input for="amount" oninput="amount.value=rangeInput.value" id="slider" type="range" min="0" max="24" name="rangeInput" disabled="disabled" value="0" />
+                      Hours: <input oninput="rangeInput.value=amount.value" id= "slider-box" class="hours-box" type="text" value="0" name="amount" for="rangeInput" disabled="disabled" oninput="rangeInput.value=amount.value" />
+                   </div>
+                </form>
+              </div>
+            </div>
 
+            <div class="row">
+              <div class="col-md-3">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Collapsible Group Item #1
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="humidity">Humidity</label>
+          <input type="text" class="form-control" id="humidity" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+       </div>
+       <div class="form-group">
+         <label for="precipitation">Precepitation</label>
+         <input type="text" class="form-control" id="precepitation" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="temperature">Temperature</label>
+        <input type="text" class="form-control" id="temperature" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+     </div>
+     <div class="form-group">
+       <label for="windkm">Wind (km/h)</label>
+       <input type="text" class="form-control" id="windkm" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+      <label for="wind-direction">Wind (direction)</label>
+      <input type="text" class="form-control" id="wind-direction" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
+   </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
+              </div>
+              <div class="col-md-9">
                 <div id="canvases">
                     <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
                     <style media="screen">
@@ -47,15 +132,21 @@
                 <div style="width:100%; height:500px"  id="leaflet-map">
 
                 </div>
-
-                </div>
               </div>
             </div>
+
+
+
+          </div>
+
         </body>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+    <script src="./js/bootstrap.js"></script>
+
+
 
     <!-- mapping -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
@@ -70,6 +161,7 @@
 
 
 <script type="text/javascript">
+
 class Simulation {
     constructor(canvas,data) {
         this.canvas=canvas
@@ -128,7 +220,17 @@ class Simulation {
         // tick the environment
         this.clock++;
         var t0 = new Date().getTime()
-        document.getElementById('tick').innerText=this.clock
+        document.getElementById('slider').value=this.clock
+        document.getElementById('slider-box').value=this.clock
+        // $(  document ).ready(function(){
+        //   $('.slider').slider().bind({
+        //       change: function() {
+        //          alert('change triggered');
+        //       }
+        //   });
+        //
+        //   $('.slider').trigger('change');
+        // });
         if (this.clock>1000) return 0;
         console.log('tick',this.clock)
         //
