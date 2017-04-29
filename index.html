@@ -556,6 +556,7 @@ class Simulation {
             fuel= fuel.subtract(1).multiply(-1)
 
             elev.dtype="float32"
+            elev= elev.subtract(elev.max()).multiply(-1)
 
 
 
