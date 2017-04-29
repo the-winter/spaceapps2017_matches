@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Montecarlo simulation of bushfire risk</title>
+        <title>Bushfire Simulator</title>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <!--  JS -->
@@ -14,7 +14,7 @@
 
                 <div class="page-header">
                   <h1>Bushfire Simulator</h1>
-                  <h3>A simulation on landsat 8 data from NASA</h3>
+                  <h3>Team matches' project for spaceapp2017 perth. A simulation on landsat 8 data from NASA</h3>
                 </div>
                 <div class="buttons-group">
                   <button id="start" type="button">Start</button>
@@ -27,13 +27,8 @@
                 <div id="canvases">
                     <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
                     <style media="screen">
-                        .layer1 {z-index: 1;}
-                        .layer2 {z-index: 2; opacity: 0.5}
-                        .layer3 {z-index: 3}
-                        .layer4 {z-index: 4}
-                        .layer5 {z-index: 5}
                         .overlay {position:absolute}
-                        .overlay {    width: 50%; opacity:0   }
+                        .overlay {width: 50%; opacity:0}
                     </style>
                     <canvas id="map" class="layer1 overlay"></canvas>
                     <canvas id="fuel" class="layer2 overlay"></canvas>
@@ -62,7 +57,7 @@
     <script src="//api.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
 
     <!-- We need matrices with convolution and reshape methods -->
-    <script src="//rawgit.com/waylonflinn/weblas/master/dist/weblas.js"></script>
+    <!-- <script src="//rawgit.com/waylonflinn/weblas/master/dist/weblas.js"></script> -->
     <script src="//rawgit.com/nicolaspanel/numjs/893016ec40e62eaaa126e1024dbe250aafb3014b/dist/numjs.js"></script>
 
 
@@ -91,22 +86,31 @@ class Simulation {
 
         // initial point away from walls
         // we will make a nice bright cross so it's visible
+        var padding = _.round(this.W/4)
         var x,y
         if (e){
-            // get click location FIXME might not work on all browsers
-            y=_.round(e.layerX/this.canvas.offsetWidth*this.canvas.width)
-            x=_.round(e.layerY/this.canvas.offsetHeight*this.canvas.height)
+            x = -(e.latlng.lat-metadata.bounds[1][0])/(metadata.bounds[1][0]-metadata.bounds[0][0])*this.H
+            y = (e.latlng.lng-metadata.bounds[0][1])/(metadata.bounds[1][1]-metadata.bounds[0][1])*this.W
+            x=_.round(x)
+            y=_.round(y)
         } else {
-            x = _.round(d3.randomUniform(20, this.W-20)())
-            y = _.round(d3.randomUniform(20, this.H-20)())
+            x = _.round(d3.randomUniform(padding, this.W-padding)())
+            y = _.round(d3.randomUniform(padding, this.H-padding)())
         }
         console.log('fire',x,y)
         this.data.set(x,y,0,1)
-        this.data.set(x-1,y-1,0,0.3)
-        this.data.set(x+1,y-1,0,0.3)
-        this.data.set(x-1,y+1,0,0.3)
-        this.data.set(x+1,y+1,0,0.3)
-        this.data.set(x,y,1,0.3)
+
+
+        // this.data.set(x+1,y,0,0.2*Math.random())
+        // this.data.set(x-1,y,0,0.2*Math.random())
+        // this.data.set(x,y+1,0,0.2*Math.random())
+        // this.data.set(x,y-1,0,0.2*Math.random())
+        //
+        // this.data.set(x-1,y-1,0,0.1*Math.random())
+        // this.data.set(x+1,y-1,0,0.1*Math.random())
+        // this.data.set(x-1,y+1,0,0.1*Math.random())
+        // this.data.set(x+1,y+1,0,0.1*Math.random())
+        // this.data.set(x,y,1,0.3)
         this.display()
         return [x,y]
     }
@@ -299,11 +303,12 @@ class Simulation {
             burning_cells:burning_cells
         }
     }
-    start(n=5000){
+    start(n=5000, callback){
         this.stop()
         this.loop = setInterval(()=>{
             this.tick()
             this.display()
+            if (callback) callback()
         },n)
     }
     stop(){
@@ -318,13 +323,13 @@ class Simulation {
         image-rendering: pixelated
     }
 </style>
-    <script src="images/X145.34083_Y-37.533_DT20170428-042328_3857_30/metadata.js"></script>
+    <script src="images/bridagadoon_20170429-065415_3857_60/metadata.js"></script>
     <script type="text/javascript">
     // parameters
-    var simulations = 2
-    var fuel_src = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/2017.EVI.png'
-    var elevation_src = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/SRTMGL1_003.elevation_pixel_units.png'
-    var visual = 'images/X145.34083_Y-37.533_DT20170428-042328_3857_30/visual.png'
+    var simulation
+    var fuel_src = 'images/bridagadoon_20170429-065415_3857_60/2017.EVI.png'
+    var elevation_src = 'images/bridagadoon_20170429-065415_3857_60/SRTMGL1_003.elevation_pixel_units.png'
+    var visual = 'images/bridagadoon_20170429-065415_3857_60/visual.png'
 
     /**
      * Load png images as an array pf [r,g,b,a,r1,g1,b1,a1,...]
@@ -377,17 +382,17 @@ class Simulation {
         var fire_layer = new L.ImageOverlay(
             canvas.toDataURL(),
             bounds,
-            {opacity:0.5}
+            {opacity:0.5, interactive:true}
         )
-        // image_layer1.addTo(leafletMap);
+
         L.mapbox.accessToken = 'pk.eyJ1IjoiZGlnaXRhbGdsb2JlIiwiYSI6ImNpc2t0ZG16NzA2Y2QydW53M2s0c2liNncifQ.YzEK6kmdCrtvssUfrncwKQ';
         var base = L.mapbox.tileLayer('digitalglobe.nal0g75k')
 
 
         var leafletMap = L.map('leaflet-map',{
             center:metadata.point,
-            zoom:15,
-            maxBounds:bounds,
+            zoom:14,
+            maxBounds:bounds, // don't let user move outside bounds
             // zoomControl: true,
             maxZoom:16,
             minZoom:4,
@@ -414,6 +419,9 @@ class Simulation {
             // fire_layer.bringToFront()
         }
         leafletMap.on('overlayadd',updateLayers)
+        // fire_layer.on('click',(e)=>simulation.ignite(e))
+        fire_layer.on('dblclick',(e)=>{simulation.ignite(e);updateLayers()})
+        leafletMap.on('click',(e)=>{simulation.ignite(e);updateLayers()})
 
         /* start simulation */
 
@@ -444,6 +452,10 @@ class Simulation {
             fuel.dtype="float32"
             fuel=fuel.multiply(1/255)
 
+            // HACK for some reason it's read inverted and this is a fix ??
+            // should fix this in the notebook
+            fuel= fuel.subtract(1).multiply(-1)
+
             elev.dtype="float32"
 
 
@@ -451,11 +463,11 @@ class Simulation {
             // crop to smallest
             var canvas=document.getElementById('fire');
 
-            var simulation = new Simulation(
+            simulation = new Simulation(
                 canvas,
                 {
-                    fuel:fuel,//nj.images.rgb2gray(fuel),
-                    elev:elev,//nj.images.rgb2gray(elev),
+                    fuel:fuel,
+                    elev:elev,
                 }
             );
 
@@ -464,15 +476,9 @@ class Simulation {
 
 
 
-            // choose a starting point
 
-            // also load a cumulative risk canvas
-            // for each
-            // choose starting pixels and display
-            // now propogate
-            // repeat
             document.getElementById('start').onclick=function(){
-                simulation.start()
+                simulation.start(5000, ()=>updateLayers())
             }
             document.getElementById('stop').onclick=function(){
                 simulation.stop()
