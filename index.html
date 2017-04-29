@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Bushfire Simulator</title>
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <!--  JS -->
     </head>
@@ -17,10 +17,10 @@
                   <h3>Team matches' project for spaceapp2017 perth. A simulation on landsat 8 data from NASA</h3>
                 </div>
                 <div class="buttons-group">
-                  <button id="start" type="button">Start</button>
-                  <button id="stop" type="button">Stop</button>
-                  <button id="next" type="button">next</button>
-                  <button id="reset" type="button">reset</button>
+                  <button id="start" class="btn" type="button">Start</button>
+                  <button id="stop" class="btn" type="button">Stop</button>
+                  <button id="next" class="btn" type="button">next</button>
+                  <button id="reset" class="btn" type="button">reset</button>
                   <div><label>Hours: </label><span id="tick">0</span></div>
                 </div>
 
@@ -47,8 +47,10 @@
         </body>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
 
     <!-- mapping -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
@@ -68,6 +70,7 @@ class Simulation {
         this.H = canvas.height = data.fuel.shape[0]
         this.W = canvas.width = data.fuel.shape[1]
         this.clock = 0;
+        this.ignited=false
 
         data.fuel =  data.fuel.reshape([data.fuel.shape[0],data.fuel.shape[1],1])
         data.fire = nj.zeros(data.fuel.shape)
@@ -75,12 +78,13 @@ class Simulation {
         data.elev = data.elev.reshape([data.elev.shape[0],data.elev.shape[1],1])
         this.data = nj.concatenate([data.fire,data.fuel,data.ash,data.elev])
 
-        var coords = this.ignite()
+        // var coords = this.ignite()
         this.display();
     }
 
     /* set an initial fire */
     ignite(e){
+        this.ignited=true
         // TODO make click to ignore work with zooming
         var canvas = this.canvas
 
@@ -117,6 +121,7 @@ class Simulation {
 
     /* advance model by one tick */
     tick(){
+        if (!this.ignited) this.ignite()
         // PARAMS TODO move them
         var fuelMultipler = 5 // how many turns it burns for
         var fireMultiplier = 1
@@ -329,7 +334,6 @@ class Simulation {
     var simulation
     var fuel_src = 'images/bridagadoon_20170429-065415_3857_60/2017.EVI.png'
     var elevation_src = 'images/bridagadoon_20170429-065415_3857_60/SRTMGL1_003.elevation_pixel_units.png'
-    var visual = 'images/bridagadoon_20170429-065415_3857_60/visual.png'
 
     /**
      * Load png images as an array pf [r,g,b,a,r1,g1,b1,a1,...]
@@ -428,7 +432,7 @@ class Simulation {
         // load elevation onto a canvas
         var canvas=document.getElementById('elevation');
         var im = new Image()
-        im.src=visual
+        im.src=elevation_src
         im.onload=function(){
             // set size of all canvases
             document.getElementById('canvases').querySelectorAll('canvas').forEach((canvas)=>{
@@ -484,10 +488,13 @@ class Simulation {
                 simulation.stop()
             }
             document.getElementById('next').onclick=function(){
+                $('#next').button('loading') // FIXME doesn't work
                 simulation.tick()
                 simulation.display()
                 console.log(simulation.stats())
                 updateLayers()
+                $('#next').button('reset')
+
             }
             document.getElementById('reset').onclick=function(){
                 simulation = new Simulation(
