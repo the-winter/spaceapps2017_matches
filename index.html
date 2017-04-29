@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Montecarlo simulation of bushfire risk</title>
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+
+        <!--  JS -->
+    </head>
+    <body>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+
+            <div class="page-header">
+              <h1>Bushfire Simulator</h1>
+              <h3>A simulation on landsat 8 data from NASA</h3>
+            </div>
+            <div class="buttons-group">
+              <button id="start" type="button">Start</button>
+              <button id="stop" type="button">Stop</button>
+              <button id="next" type="button">next</button>
+              <button id="reset" type="button">reset</button>
+            </div>
+              <canvas id="myCanvas"></canvas>
+              <div class="description">
+              This simulation
+              </div>
+
+            </div>
+          </div>
+        </div>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+
+    <!-- jstat -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/random-js/1.0.8/random.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.6/chance.min.js"></script> -->
+    <script src="https://d3js.org/d3-random.v1.js"></script>
+
+    <!-- We need matricies with convolution and reshape -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.12.1/math.min.js"></script> -->
+
+    <!-- nj.image.read doesn't work -->
+    <script src="https://rawgit.com/nicolaspanel/numjs/893016ec40e62eaaa126e1024dbe250aafb3014b/dist/numjs.js"></script>
+
+
+<script type="text/javascript">
+class Simulation {
+    constructor(canvas,data) {
+        this.canvas=canvas
+        this.W = canvas.width = data.fuel.shape[0]
+        this.H = canvas.height = data.fuel.shape[1]
+        this.clock = 0;
+
+        // this.data = nj.zeros([this.W,this.H,4]) // fire,fuel, ash, alpha
+
+        data.fuel =  data.fuel.reshape([data.fuel.shape[0],data.fuel.shape[1],1])
+        data.fire = nj.zeros(data.fuel.shape)
+        data.ash = nj.zeros(data.fuel.shape)
+        data.alpha = nj.ones(data.fuel.shape)
+        this.data = nj.concatenate([data.fire,data.fuel,data.ash,data.alpha])
+
+        // initial point away from walls
+        // we will make a nice bright cross
+        var x = _.round(d3.randomUniform(20, this.W-20)())
+        var y = _.round(d3.randomUniform(20, this.H-20)())
+        console.log('fire',x,y)
+        this.data.set(x,y,0,1)
+        this.data.set(x-1,y-1,0,0.3)
+        this.data.set(x+1,y-1,0,0.3)
+        this.data.set(x-1,y+1,0,0.3)
+        this.data.set(x+1,y+1,0,0.3)
+        this.data.set(x,y,1,0.3)
+
+        this.display();
+    }
+    tick(){
+        // PARAMS TODO move them
+        var fuelMultipler = 5 // how many turns it burns for
+        var fireMultiplier = 1
+
+        // tick the environment
+        this.clock++;
+        if (this.clock>100) return 0;
+        console.log('tick',this.clock)
+
+        // I could do nearby fires as a convoluton, but lets wait to include elevation diff
+        var all_fires = this.data.slice(null,null,[0,1]).clone()
+        // var filter = nj.array([0.5,1,0.5,1,0,1,0.5,1,0.5]).reshape(3,3,1)
+        // var nearby_fires = nj.convolve(all_fires,filter)
+        // console.log('max',nearby_fires.max())
+
+        var new_fires = []
+
+        var fires=0
+        for (var x = 1; x < this.W-1; x++) {
+            for (var y = 1; y < this.H-1; y++) {
+                // can we do this as a convolution?
+                var fire = this.data.get(x,y,0)*fireMultiplier
+                var fuel = this.data.get(x,y,1)*fuelMultipler
+                var ash = this.data.get(x,y,2)
+
+                if (fuel==0) continue
+
+                ash += fire // fire from last turn causes ash to build up
+                fuel = _.clamp(fuel-fire,0,fuelMultipler) // and fuel to decrease
+                if (fire>0){
+                    fire*=2 // exponentially grow within pixel
+                } else {
+                    // each neighbouring tile might light it
+                    //
+                    // TODO it spreads right because new updates effects the next cell, fix this
+
+                    // TODO include slope or elevation differences
+                    var fires_adajacent = [
+                        this.data.get(x-1,y,0),
+                        this.data.get(x,y+1,0),
+                        this.data.get(x+1,y,0),
+                        this.data.get(x,y-1,0),
+                    ]
+                    var fires_diagonal = [
+                        this.data.get(x-1,y-1,0),
+                        this.data.get(x+1,y+1,0),
+                        this.data.get(x+1,y-1,0),
+                        this.data.get(x-1,y+1,0),
+                    ]
+                    var nearby_fires = (_.sum(fires_adajacent)+_.sum(fires_diagonal)/2)/8
+                    if (nearby_fires==0) continue
+
+                    // neighbouring tiles have a chance of lighting our tile
+                    if (nearby_fires<Math.random()) nearby_fires=0
+                }
+                // clamp between 0 and fuel remaining.
+                fire =  _.clamp((fire+nearby_fires),0,_.min([1,fuel]))
+                // round it so we don't deal with tiny fractions
+                fire = _.round(fire,2)
+
+                console.assert(fire!=undefined)
+                console.assert(fuel!=undefined)
+                console.assert(ash!=undefined)
+
+                all_fires.set(x,y,0,fire/fireMultiplier)
+                this.data.set(x,y,1,fuel/fuelMultipler)
+                this.data.set(x,y,2,ash)
+                if (fire>0){
+                    fires+=fire
+                //     console.debug('fire',x,y,fire,fuel,ash)
+                }
+            }
+        }
+
+        // set all the new fires
+        for (var x = 1; x < this.W-1; x++) {
+            for (var y = 1; y < this.H-1; y++) {
+                this.data.set(x,y,0,all_fires.get(x,y,0))
+            }
+        }
+
+        console.log('tick',this.clock,'change',fires)
+        return fires
+
+
+    }
+    display(){
+        var H = this.canvas.height;
+        var W = this.canvas.width;
+        var ctx = this.canvas.getContext('2d');
+        var imageData = ctx.getImageData(0,0,H,W)
+        console.assert(this.data.selection.data.length==imageData.data.length)
+
+        // for (var x = 1; x < this.W-1; x++) {
+        //     for (var y = 1; y < this.H-1; y++) {
+        //         // mix the data into colors
+        //         var cell = this.data.slice([0,1],[0,1],null).reshape(1,4)
+        //         var filter = nj.array([
+        //             [1,0,0,0],
+        //             [0,1,0,0],
+        //             [0,0,1,0],
+        //             [0,0,0,1] // r,g,b,a
+        //         ]).reshape(4,4)
+        //         var colors = nj.dot(cell,filter)
+        //
+        //         // now set imageData
+        //         for (var i = 0; i < 4; i++) {
+        //             imageData.data[i + this.W *(x + 4*z)]=colors.selection.data[i]*255.0
+        //         }
+        //     }
+        // }
+
+        // set the data with fire,fuel,ash as red,green,blue
+        for (var i = 0; i < imageData.data.length; i++) {
+            imageData.data[i]=this.data.selection.data[i]*255.0
+        }
+        ctx.putImageData(imageData, 0, 0);
+
+    }
+    start(n=10000){
+        this.stop()
+        this.loop = setInterval(()=>{
+            this.tick()
+            this.display()
+        },n)
+    }
+    stop(){
+        if (this.loop) clearInterval(this.loop)
+    }
+}
+
+
+</script>
+    <script type="text/javascript">
+    // parameters
+    var simulations = 2
+    var fuel_src = 'images/X145.34083_Y-37.533_DT20170427-093030_3857_30/2017.EVI.png'
+    var elevation_src = 'images/X145.34083_Y-37.533_DT20170427-093030_3857_30/NSW.elevation.png'
+
+    /**
+     * Load png images as an array pf [r,g,b,a,r1,g1,b1,a1,...]
+     * @param  {String} image - image url
+     * @return {Array}
+     */
+    function loadImage(image){
+        return new Promise(function(resolve, reject) {
+            // var canvas = document.createElement('canvas');
+            var img=new Image();
+            // https://jsfiddle.net/nicolaspanel/047gwg0q/
+            img.onload = function() {
+                // load using numpyjs
+                var data = nj.images.read(img)
+
+                // convert to float 32?
+                data.dtype="float32"
+                for (var i = 0; i < data.selection.data.length; i++) {
+                    data.selection.data[i]/=255
+                }
+
+                resolve(data)
+            }
+            img.onerror=reject
+            img.src=image;
+        });
+
+
+    }
+
+    // load image into canvases
+    window.onload = function() {
+        var canvas=document.getElementById('myCanvas');
+        var prom = Promise.all([
+            loadImage(fuel_src),
+            loadImage(elevation_src),
+        ]);
+        // prom.then(fuel=>console.log(fuel))
+        prom.then(([fuel,elev]) => {
+            var simulation = new Simulation(
+                canvas,
+                {
+                    fuel:nj.images.rgb2gray(fuel),
+                    elev:nj.images.rgb2gray(elev),
+                }
+            );
+            // simulation.start(20000)
+
+            // start simulation
+
+
+
+            // choose a starting point
+
+            // also load a cumulative risk canvas
+            // for each
+            // choose starting pixels and display
+            // now propogate
+            // repeat
+            document.getElementById('start').onclick=function(){
+                simulation.start()
+            }
+            document.getElementById('stop').onclick=function(){
+                simulation.stop()
+            }
+            document.getElementById('next').onclick=function(){
+                simulation.tick()
+                simulation.display()
+            }
+        })
+
+
+
+
+    };
+
+    </script>
+</html>

@@ -1,0 +1,37 @@
+# main
+arrow
+tqdm
+dataset
+
+# sci
+pandas
+scipy
+numpy
+matplotlib
+seaborn
+pandas_profiling
+
+# geometry/spatial
+shapely
+geopandas
+fiona>=1.7.1
+rasterio
+
+# images
+pillow
+
+# io
+path.py
+fastkml
+pyshp
+tabulate
+
+# view
+folio
+
+# for google earth engine
+oauth2client>=4.0.0
+google-api-python-client>=1.6.1
+pyCrypto>-2.6.1
+pyOpenSSL>=0.11
+earthengine-api>=0.1.102

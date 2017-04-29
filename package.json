@@ -1,0 +1,19 @@
+{
+  "name": "bushfire_simulator",
+  "version": "0.0.1",
+  "description": "Simulated bushfires using montecarlo simulations on Landsat-8 data from NASA.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -o"
+  },
+  "keywords": [
+    "simulator",
+    "bushfire",
+    "monto",
+    "carlo"
+  ],
+  "author": "wassname, the-winter",
+  "license": "ISC",
+  "repository":"git@gitlab.com:wassname/bushfire_simulator.git"
+}
