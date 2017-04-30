@@ -15,15 +15,13 @@
               <div class="col-md-10 col-md-offset-2">
 
                 <div class="page-header">
-                  <h1>Bushfire Simulator <small>A spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></small></h1>
+                  <h1>Bushfire Simulator </h1>
+                  <h3>A spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></h3>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-3 col-md-offset-2">
-                <input type="text" class="location-input" value="Brigadoon, Western Australia 6069"/>
-              </div>
-              <div class="col-md-3">
                 <div class="buttons-group">
                   <button id="start" class="btn" type="button">Start</button>
                   <button id="stop" class="btn" type="button">Stop</button>
@@ -34,12 +32,10 @@
                 </div>
               </div>
               <div class="col-md-3">
-                  <form >
-                    <div>
-                      <input for="amount" oninput="amount.value=rangeInput.value" id="slider" type="range" min="0" max="240" name="rangeInput" disabled="disabled" value="0" />
-                      Hours: <input oninput="rangeInput.value=amount.value" id= "slider-box" class="hours-box" type="text" value="0" name="amount" for="rangeInput" disabled="disabled" oninput="rangeInput.value=amount.value" />
-                   </div>
-                </form>
+
+              </div>
+              <div class="col-md-4">
+                <button class="pull-right">Register Burn</button>
               </div>
             </div>
 
@@ -56,11 +52,24 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
-        <select class="js-example-basic-single">
-          <option value="AL">Alabama</option>
-            ...
-          <option value="WY">Wyoming</option>
-        </select>
+
+        <section>
+          <p>Foliage</p>
+          <ul>
+          <p class="checkbox-list">
+            <input type="checkbox" value="Dry" checked="checked"/> Dry
+          </p>
+          <p class="checkbox-list">
+            <input type="checkbox" value="Wet" /> Wet
+          </p>
+          <p class="checkbox-list">
+            <input type="checkbox" value="Dry" /> Dense
+          </p>
+          <p class="checkbox-list">
+            <input type="checkbox" value="Dry" /> Sparse
+          </p>
+        </ul>
+        </section>
       </div>
     </div>
   </div>
@@ -76,7 +85,7 @@
       <div class="panel-body">
         <div class="form-group">
           <label for="trucks">Trucks</label>
-          <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" disabled="disabled">
        </div>
        <div class="form-group">
          <label for="choppers">Choppers</label>
@@ -101,31 +110,38 @@
       <div class="panel-body">
         <div class="form-group">
           <label for="humidity">Humidity</label>
-          <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" disabled="disabled" value="15%">
         </div>
         <div class="form-group">
            <label for="precipitation">Precepitation</label>
-           <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" placeholder="Enter email">
+           <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" disabled="disabled" value="5%">
         </div>
         <div class="form-group">
           <label for="temperature">Temperature</label>
-          <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" disabled="disabled" value="25&deg;">
         </div>
         <div class="form-group">
           <label for="windkm">Wind (km/h)</label>
-          <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" disabled="disabled" value="141.62">
         </div>
         <div class="form-group">
           <label for="wind-direction">Wind (direction)</label>
-          <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" disabled="disabled" value="SSE">
         </div>
       </div>
     </div>
   </div>
 </div>
               </div>
-              <div class="col-md-10">
-                <div id="canvases">
+              <div class="col-md-10 div-padding">
+                  <input type="text" class="location-input" value="Brigadoon, Western Australia 6069"/>
+                  <form>
+                    <div class="slider-div">
+                      <input for="amount" oninput="amount.value=rangeInput.value" id="slider" type="range" min="0" max="240" name="rangeInput" disabled="disabled" value="0" />
+                      Hours: <input oninput="rangeInput.value=amount.value" id= "slider-box" class="hours-box" type="text" value="0" name="amount" for="rangeInput" disabled="disabled" oninput="rangeInput.value=amount.value" />
+                    </div>
+                  </form>
+                  <div id="canvases">
                     <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
                     <style media="screen">
                         .overlay {position:absolute}
@@ -138,7 +154,7 @@
                     <canvas id="elevation" class="layer5 overlay"></canvas>
                 </div>
 
-                <div style="width:100%; height:500px"  id="leaflet-map">
+                <div style="width:100%; height:500px; margin-top: 10px;"  id="leaflet-map">
 
                 </div>
               </div>
@@ -619,6 +635,8 @@ class Simulation {
                         elev:nj.images.rgb2gray(elev),
                     }
                 );
+                document.getElementById('slider').value=0;
+                document.getElementById('slider-box').value=0;
                 document.getElementById('tick').innterText="0"
                 updateLayers()
             }

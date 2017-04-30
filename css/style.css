@@ -1,5 +1,19 @@
 #myCanvas {
   width: 100%;
+  padding-top: 10px;
+}
+
+.div-padding: {
+  padding: 0;
+}
+
+/** Buttons **/
+button#start {
+    background-color: lime;
+}
+
+button#stop {
+    background-color: red;
 }
 
 /** Silder **/
@@ -7,6 +21,7 @@
 .hours-box {
   border: none;
   width: 2em;
+  background-color: transparent;
 }
 
 .btn {
@@ -22,9 +37,26 @@ input.sidebar-input {
   font-size: 10px;
   width:30px;
   display:inline;
+}
 
+/** absolute divs **/
+
+.slider-div {
+    position: absolute;
+    z-index: 1;
+    margin-left: 350px;
+    margin-top: 20px;
+    color: white;
 }
 
 .location-input {
-  width: 100%;
+  position: absolute;
+  margin-left: 50px;
+  margin-top: 20px;
+  z-index: 1;
+  width: 30%;
+}
+
+.checkbox-list {
+  font-size: 10px;
 }
