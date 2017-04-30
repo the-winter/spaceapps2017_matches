@@ -25,10 +25,10 @@
             <div class="row">
               <div class="col-sm-3 col-sm-offset-2">
                 <div class="buttons-group">
-                  <button id="start" class="btn" type="button">Start</button>
-                  <button id="stop" class="btn" type="button">Stop</button>
-                  <button id="next" class="btn" type="button">next</button>
-                  <button id="reset" class="btn" type="button">reset</button>
+                  <button id="start" class="btn" type="button"><span class="glyphicon glyphicon-play"></span></button>
+                  <button id="stop" class="btn" type="button"><span class="glyphicon glyphicon-stop"></span></button>
+                  <button id="next" class="btn" type="button"><span class="glyphicon glyphicon-forward"></span></button>
+                  <button id="reset" class="btn" type="button"><span class="glyphicon glyphicon-repeat"></span></button>
 
                 </div>
               </div>
@@ -54,96 +54,97 @@
             <div class="row">
               <div class="col-sm-2">
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Conditions
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Conditions
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-body">
 
-        <section>
-          <p>Foliage</p>
-          <ul>
-          <p class="checkbox-list">
-            <input type="checkbox" value="Dry" checked="checked"/> Dry
-          </p>
-          <p class="checkbox-list">
-            <input type="checkbox" value="Wet" /> Wet
-          </p>
-          <p class="checkbox-list">
-            <input type="checkbox" value="Dry" /> Dense
-          </p>
-          <p class="checkbox-list">
-            <input type="checkbox" value="Dry" /> Sparse
-          </p>
-        </ul>
-        </section>
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Resources
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="trucks">Trucks</label>
-          <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" disabled="disabled">
-       </div>
-       <div class="form-group">
-         <label for="choppers">Choppers</label>
-         <input type="text" class="sidebar-input pull-right" id="choppers"  aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <label for="roads-traffic">Roads/Traffic</label>
-        <input type="text" class="sidebar-input pull-right" id="roads-traffic"  aria-describedby="emailHelp" placeholder="Enter email">
-     </div>
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Variables
-        </a>
-      </h4>
-    </div>
-    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="humidity">Humidity</label>
-          <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" disabled="disabled" value="15%">
-        </div>
-        <div class="form-group">
-           <label for="precipitation">Precepitation</label>
-           <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" disabled="disabled" value="5%">
-        </div>
-        <div class="form-group">
-          <label for="temperature">Temperature</label>
-          <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" disabled="disabled" value="25&deg;">
-        </div>
-        <div class="form-group">
-          <label for="windkm">Wind (km/h)</label>
-          <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" disabled="disabled" value="141.62">
-        </div>
-        <div class="form-group">
-          <label for="wind-direction">Wind (direction)</label>
-          <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" disabled="disabled" value="SSE">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                    <section>
+                      <p>Foliage</p>
+                      <ul>
+                      <p class="checkbox-list">
+                        <input type="checkbox" value="Dry" checked="checked"/> Dry
+                      </p>
+                      <p class="checkbox-list">
+                        <input type="checkbox" value="Wet" /> Wet
+                      </p>
+                      <p class="checkbox-list">
+                        <input type="checkbox" value="Dry" /> Dense
+                      </p>
+                      <p class="checkbox-list">
+                        <input type="checkbox" value="Dry" /> Sparse
+                      </p>
+                    </ul>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                  <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Resources
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <label for="trucks">Trucks</label>
+                      <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" disabled="disabled" value="5">
+                   </div>
+                   <div class="form-group">
+                     <label for="choppers">Choppers</label>
+                     <input type="text" class="sidebar-input pull-right" id="choppers"  aria-describedby="emailHelp" disabled="disabled" value="7">
+                  </div>
+                  <div class="form-group">
+                    <label for="roads-traffic">Roads/Traffic</label>
+                    <input type="text" class="sidebar-input pull-right" id="roads-traffic"  aria-describedby="emailHelp" disabled="disabled" value="6">
+                 </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThree">
+                  <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Variables
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <label for="humidity">Humidity</label>
+                      <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" disabled="disabled" value="15%">
+                    </div>
+                    <div class="form-group">
+                       <label for="precipitation">Precepitation</label>
+                       <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" disabled="disabled" value="5%">
+                    </div>
+                    <div class="form-group">
+                      <label for="temperature">Temperature</label>
+                      <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" disabled="disabled" value="25&deg;">
+                    </div>
+                    <div class="form-group">
+                      <label for="windkm">Wind (km/h)</label>
+                      <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" disabled="disabled" value="141.62">
+                    </div>
+                    <div class="form-group">
+                      <label for="wind-direction">Wind (direction)</label>
+                      <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" disabled="disabled" value="SSE">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <button>OK</span></button>
               </div>
               <div class="col-sm-10 div-padding">
                   <input type="text" class="location-input" value="Brigadoon, Western Australia 6069"/>
@@ -169,34 +170,42 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+
+              <div class="col-sm-10 col-sm-offset-2">
+                <div class="how-it-works">
+                    <h2>About</h2>
+                    Made by <a href="https://github.com/JaycobC">Jaycob</a>, <a href="https://github.com/the-winter">Ivana</a>, <a href="https://github.com/wassname">Mike</a>, and <a href="https://github.com/nicolaruprecht">Nicola</a>. A project for <a href="https://github.com/the-winter/spaceapps2017_matches">spaceapps2017 in Perth</a>.
+                    <h2>Instructions</h2>
+                    <ul>
+                        <li>Click to light a fire</li>
+                        <li>Double click to place a fire engine</li>
+                        <li>Click to light a fire</li>
+                        <li>press start to step the simulation        </li>
+                    </ul>
+                    <h2>How it works</h2>
 
 
-          <div class="how-it-works">
-              <h2>About</h2>
-              Made by <a href="https://github.com/JaycobC">Jaycob</a>, <a href="https://github.com/the-winter">Ivana</a>, <a href="https://github.com/wassname">Mike</a>, and <a href="https://github.com/nicolaruprecht">Nicola</a>. A project for <a href="https://github.com/the-winter/spaceapps2017_matches">spaceapps2017 in Perth</a>.
-              <h2>Instructions</h2>
-              <ul>
-                  <li>Click to light a fire</li>
-                  <li>Double click to place a fire engine</li>
-                  <li>Click to light a fire</li>
-                  <li>press start to step the simulation        </li>
-              </ul>
+                    The fire burns fuel (<em>f</em>) which is taken from an estimate of vegetation. This is provided by <a href="https://explorer.earthengine.google.com/#detail/LANDSAT%2FLC8_L1T_ANNUAL_EVI"> an EVI index derived from NASA's Landsat-8 images</a>. Fire spreads uphill easily but struggles to spread downhill so we take into account elevation by using <a href="https://explorer.earthengine.google.com/#detail/USGS%2FSRTMGL1_003"> 30m resolution SRTM Digital elevation data</a>.<p/>
 
-              <h2>How it works</h2>
+                    The equation which described the fires change to ignite a nearby tile is adapted from <a href="https://www.researchgate.net/publication/229624147_McArthur's_fire-danger_meters_expressed_as_equations"> Noble et al 1980</a>.
+                    <pre>
+                       T = I * W^2 * exp(0.069 *atan(dh/w)) * (FDI + 0.024 * V * cos(theta))
+                        ~= I * W^2 * exp(0.069 *dh/w) * (FDI + 0.024 * V * cos(theta))
+                    </pre>
+                    Where I is fire intensity, W is fuel weight, dh is the difference in height between tiles, w is the distance between tiles, V is wind velocity and theta describes the wind direction. FDI is the fire danger index which covers drought factor, temperature, and humidity. We use the small tan approximation to simplify the equation.<p/>
 
+                    <em>Note that wind direction and velocity are not implemented yet.</em><p/>
 
-              The fire burns fuel (<em>f</em>) which is taken from an estimate of vegetation. This is provided by <a href="https://explorer.earthengine.google.com/#detail/LANDSAT%2FLC8_L1T_ANNUAL_EVI"> an EVI index derived from NASA's Landsat-8 images</a>. Fire spreads uphill easily but struggles to spread downhill so we take into account elevation by using <a href="https://explorer.earthengine.google.com/#detail/USGS%2FSRTMGL1_003"> 30m resolution SRTM Digital elevation data</a>.<p/>
-
-              The equation which described the fires change to ignite a nearby tile is adapted from <a href="https://www.researchgate.net/publication/229624147_McArthur's_fire-danger_meters_expressed_as_equations"> Noble et al 1980</a>.
-              <pre>
-                 T = I * W^2 * exp(0.069 *atan(dh/w)) * (FDI + 0.024 * V * cos(theta))
-                  ~= I * W^2 * exp(0.069 *dh/w) * (FDI + 0.024 * V * cos(theta))
-              </pre>
-              Where I is fire intensity, W is fuel weight, dh is the difference in height between tiles, w is the distance between tiles, V is wind velocity and theta describes the wind direction. FDI is the fire danger index which covers drought factor, temperature, and humidity. We use the small tan approximation to simplify the equation.<p/>
-
-              <em>Note that wind direction and velocity are not implemented yet.</em><p/>
-
+                </div>
+                <footer>
+                  <span class="glyphicon glyphicon-copyright-mark"></span> Matches 2017.
+                </footer>
+              </div>
+            </div>
           </div>
+
+
 
         </body>
 
