@@ -4,13 +4,15 @@
         <meta charset="utf-8">
         <title>Bushfire Simulator</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <!--  JS -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+        <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v2.2.1/mapbox.css">
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
     </head>
         <body>
           <div class="container">
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-sm-10 col-sm-offset-2">
 
                 <div class="page-header">
                   <h1>Bushfire Simulator <small>A spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></small></h1>
@@ -18,20 +20,19 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-3 col-md-offset-2">
+              <div class="col-sm-3 col-sm-offset-2">
+                <input type="text" class="location-input" value="Brigadoon, Western Australia 6069"/>
+              </div>
+              <div class="col-sm-3">
                 <div class="buttons-group">
                   <button id="start" class="btn" type="button">Start</button>
                   <button id="stop" class="btn" type="button">Stop</button>
                   <button id="next" class="btn" type="button">next</button>
                   <button id="reset" class="btn" type="button">reset</button>
-                  <!-- <div><label>Hours: </label><span id="tick">0</span></div> -->
 
                 </div>
               </div>
-              <div class="col-md-3">
-                <input type="text" value="Brigadoon, Western Australia 6069"/>
-              </div>
-              <div class="col-md-3">
+              <div class="col-sm-3">
                   <form >
                     <div>
                       <input for="amount" oninput="amount.value=rangeInput.value" id="slider" type="range" min="0" max="240" name="rangeInput" disabled="disabled" value="0" />
@@ -42,39 +43,23 @@
             </div>
 
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-sm-2">
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Collapsible Group Item #1
+          Conditions
         </a>
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
-        <div class="form-group">
-          <label for="humidity">Humidity</label>
-          <input type="text" class="form-control" id="humidity" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-       </div>
-       <div class="form-group">
-         <label for="precipitation">Precepitation</label>
-         <input type="text" class="form-control" id="precepitation" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <label for="temperature">Temperature</label>
-        <input type="text" class="form-control" id="temperature" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-     </div>
-     <div class="form-group">
-       <label for="windkm">Wind (km/h)</label>
-       <input type="text" class="form-control" id="windkm" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-      <label for="wind-direction">Wind (direction)</label>
-      <input type="text" class="form-control" id="wind-direction" style="width:50px; display:inline;" aria-describedby="emailHelp" placeholder="Enter email">
-   </div>
-
+        <select class="js-example-basic-single">
+          <option value="AL">Alabama</option>
+            ...
+          <option value="WY">Wyoming</option>
+        </select>
       </div>
     </div>
   </div>
@@ -82,13 +67,24 @@
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Collapsible Group Item #2
+          Resources
         </a>
       </h4>
     </div>
     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <div class="form-group">
+          <label for="trucks">Trucks</label>
+          <input type="text" class="sidebar-input pull-right" id="trucks"  aria-describedby="emailHelp" placeholder="Enter email">
+       </div>
+       <div class="form-group">
+         <label for="choppers">Choppers</label>
+         <input type="text" class="sidebar-input pull-right" id="choppers"  aria-describedby="emailHelp" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="roads-traffic">Roads/Traffic</label>
+        <input type="text" class="sidebar-input pull-right" id="roads-traffic"  aria-describedby="emailHelp" placeholder="Enter email">
+     </div>
       </div>
     </div>
   </div>
@@ -96,30 +92,45 @@
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Collapsible Group Item #3
+          Variables
         </a>
       </h4>
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <div class="form-group">
+          <label for="humidity">Humidity</label>
+          <input type="text" class="sidebar-input pull-right" id="humidity"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+           <label for="precipitation">Precepitation</label>
+           <input type="text" class="sidebar-input pull-right" id="precepitation"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="temperature">Temperature</label>
+          <input type="text" class="sidebar-input pull-right" id="temperature"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="windkm">Wind (km/h)</label>
+          <input type="text" class="sidebar-input pull-right" id="windkm"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="wind-direction">Wind (direction)</label>
+          <input type="text" class="sidebar-input pull-right" id="wind-direction"  aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
       </div>
     </div>
   </div>
 </div>
               </div>
-              <div class="col-md-9">
+              <div class="col-sm-10">
                 <div id="canvases">
-                    <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
-                    <style media="screen">
-                        .overlay {position:absolute}
-                        .overlay {width: 50%; opacity:0}
-                    </style>
                     <canvas id="map" class="layer1 overlay"></canvas>
                     <canvas id="fuel" class="layer2 overlay"></canvas>
                     <canvas id="ash" class="layer3 overlay"></canvas>
                     <canvas id="fire" class="layer4 overlay"></canvas>
                     <canvas id="elevation" class="layer5 overlay"></canvas>
+                    <canvas id="response" class="layer6 overlay"></canvas>
                 </div>
 
                 <div style="width:100%; height:500px"  id="leaflet-map">
@@ -132,298 +143,67 @@
 
           </div>
 
+          <div class="how-it-works">
+              <h2>About</h2>
+              Made by <a href="https://github.com/JaycobC">Jaycob</a>, <a href="https://github.com/the-winter">Ivana</a>, <a href="https://github.com/wassname">Mike</a>, and <a href="https://github.com/nicolaruprecht">Nicola</a>. A project for <a href="https://github.com/the-winter/spaceapps2017_matches">spaceapps2017 in Perth</a>.
+              <h2>Instructions</h2>
+              <ul>
+                  <li>Click to light a fire</li>
+                  <li>Double click to place a fire engine</li>
+                  <li>Click to light a fire</li>
+                  <li>press start to step the simulation        </li>
+              </ul>
+
+              <h2>How it works</h2>
+
+
+              The fire burns fuel (<em>f</em>) which is taken from an estimate of vegetation. This is provided by <a href="https://explorer.earthengine.google.com/#detail/LANDSAT%2FLC8_L1T_ANNUAL_EVI"> an EVI index derived from NASA's Landsat-8 images</a>. Fire spreads uphill easily but struggles to spread downhill so we take into account elevation by using <a href="https://explorer.earthengine.google.com/#detail/USGS%2FSRTMGL1_003"> 30m resolution SRTM Digital elevation data</a>.<p/>
+
+              The equation which described the fires change to ignite a nearby tile is adapted from <a href="https://www.researchgate.net/publication/229624147_McArthur's_fire-danger_meters_expressed_as_equations"> Noble et al 1980</a>.
+              <pre>
+                 T = I * W^2 * exp(0.069 *atan(dh/w)) * (FDI + 0.024 * V * cos(theta))
+                  ~= I * W^2 * exp(0.069 *dh/w) * (FDI + 0.024 * V * cos(theta))
+              </pre>
+              Where I is fire intensity, W is fuel weight, dh is the difference in height between tiles, w is the distance between tiles, V is wind velocity and theta describes the wind direction. FDI is the fire danger index which covers drought factor, temperature, and humidity. We use the small tan approximation to simplify the equation.<p/>
+
+              <em>Note that wind direction and velocity are not implemented yet.</em><p/>
+
+          </div>
+
         </body>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
-    <script src="./js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
 
     <!-- mapping -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
 
-    <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v2.2.1/mapbox.css">
     <script src="//api.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
 
     <!-- We need matrices with convolution and reshape methods -->
     <!-- <script src="//rawgit.com/waylonflinn/weblas/master/dist/weblas.js"></script> -->
     <script src="//rawgit.com/nicolaspanel/numjs/893016ec40e62eaaa126e1024dbe250aafb3014b/dist/numjs.js"></script>
 
+    <!-- App engine and data -->
+    <script src="js/simulation.js"></script>
+    <script src="images/bridagadoon_20170429-065415_3857_60/metadata.js"></script>
 
 <script type="text/javascript">
 
-class Simulation {
-    constructor(canvas,data) {
-        this.canvas=canvas
-        this.H = canvas.height = data.fuel.shape[0]
-        this.W = canvas.width = data.fuel.shape[1]
-        this.clock = 0;
-        this.ignited=false
-
-        data.fuel =  data.fuel.reshape([data.fuel.shape[0],data.fuel.shape[1],1])
-        data.fire = nj.zeros(data.fuel.shape)
-        data.ash = nj.zeros(data.fuel.shape)
-        data.elev = data.elev.reshape([data.elev.shape[0],data.elev.shape[1],1])
-        this.data = nj.concatenate([data.fire,data.fuel,data.ash,data.elev])
-
-        // var coords = this.ignite()
-        this.display();
-    }
-
-    /* set an initial fire */
-    ignite(e){
-        this.ignited=true
-        // TODO make click to ignore work with zooming
-        var canvas = this.canvas
-
-        // initial point away from walls
-        // we will make a nice bright cross so it's visible
-        var padding = _.round(this.W/4)
-        var x,y
-        if (e){
-            x = -(e.latlng.lat-metadata.bounds[1][0])/(metadata.bounds[1][0]-metadata.bounds[0][0])*this.H
-            y = (e.latlng.lng-metadata.bounds[0][1])/(metadata.bounds[1][1]-metadata.bounds[0][1])*this.W
-            x=_.round(x)
-            y=_.round(y)
-        } else {
-            x = _.round(d3.randomUniform(padding, this.W-padding)())
-            y = _.round(d3.randomUniform(padding, this.H-padding)())
-        }
-        console.log('fire',x,y)
-        this.data.set(x,y,0,1)
-
-
-        // this.data.set(x+1,y,0,0.2*Math.random())
-        // this.data.set(x-1,y,0,0.2*Math.random())
-        // this.data.set(x,y+1,0,0.2*Math.random())
-        // this.data.set(x,y-1,0,0.2*Math.random())
-        //
-        // this.data.set(x-1,y-1,0,0.1*Math.random())
-        // this.data.set(x+1,y-1,0,0.1*Math.random())
-        // this.data.set(x-1,y+1,0,0.1*Math.random())
-        // this.data.set(x+1,y+1,0,0.1*Math.random())
-        // this.data.set(x,y,1,0.3)
-        this.display()
-        return [x,y]
-    }
-
-    /* advance model by one tick */
-    tick(){
-        if (!this.ignited) this.ignite()
-        // PARAMS TODO move them
-        var fuelMultipler = 5 // how many turns it burns for
-        var fireMultiplier = 1
-        var fireGrowth = 1.5
-        var transmissionChance = 0.3
-
-        // distance to diagonal tiles as a ratio to tile size np.sqrt(1**2+1**2)
-        var diagDist = 1.42
-
-        // tick the environment
-        this.clock++;
-        var t0 = new Date().getTime()
-        document.getElementById('slider').value=this.clock/10
-        document.getElementById('slider-box').value=this.clock/10
-
-        if (this.clock>100000) return 0;
-        console.log('tick',this.clock)
-        //
-        // we are modifying the data in place, so freeze a copy of the old data
-        var oldData = this.data.clone()
-
-        /**
-         * Equations: transmission_probability from a nearby tile:
-         *  $ t = I * Rt$ where I is fire intensity and Rt is the slope term
-         *  $ Rt = exp(0.069 theta) $ theta is the slope angle from -90 to 90 degrees
-         *  this reflects that its hard for fire to spread downhill
-         *  $ theta = atan(dh/w) $ where dh is the difference in height and w is width
-         *  $ theta ~= dh/w $ using the small tan approximation
-         *
-         *  giving the total equation
-         *  $ t = I * exp(0.069 *dh/w) $
-         *
-         * (from Noble et al 1980, DOI: 10.1111/j.1442-9993.1980.tb01243.x)
-         */
-        var fires=0
-        for (var x = 1; x < this.W-1; x++) {
-            for (var y = 1; y < this.H-1; y++) {
-                // can we do this as a convolution?
-                var fire = oldData.get(x,y,0)*fireMultiplier
-                var fuel = oldData.get(x,y,1)*fuelMultipler
-                var ash = oldData.get(x,y,2)
-
-                var transmissionProbability = 0
-                if (fuel==0) continue
-
-                ash += fire // fire from last turn causes ash to build up
-                fuel = _.clamp(fuel-fire,0,fuelMultipler) // and fuel to decrease
-                if (fire>0){
-                    fire*=fireGrowth // exponentially grow within pixel
-                } else {
-                    // each neighbouring tile might light it
-
-                    // intensity of fires in nearby cells
-                    var fires_nearby = oldData.slice([x-1,x+2],[y-1,y+2],[0,1]).reshape(3,3)
-                    // account for diagonal and zero the middle
-                    if (fires_nearby.sum()==0) continue
-                    var width_inv = nj.array([
-                        [1/diagDist,1,      1/diagDist  ],
-                        [1,         1e-7,   1           ],
-                        [diagDist,  1,      1/diagDist  ]
-                    ])
-                    var intensity = nj.multiply(fires_nearby,width_inv)
-
-
-                    // Slope spreading term                    //
-                    // get difference in height ( height is in pixel width units)
-                    var height = oldData.slice([x-1,x+2],[y-1,y+2],[3,4]).reshape(3,3)
-                    var h0 = oldData.get(x,y,3)
-                    var dHeight = nj.subtract(height,h0)
-                    var Rt = nj.exp(nj.multiply(dHeight,width_inv).multiply(0.069))
-
-                    transmissionProbability = nj.multiply(intensity,Rt)
-                    transmissionProbability = transmissionProbability.mean()
-
-                    // neighbouring tiles have a chance of lighting our tile
-                    console.assert(transmissionProbability<=1)
-                    if ((transmissionProbability*(fuel**2)*transmissionChance)<Math.random()) {
-                        // nearby_fires=0
-                        continue
-                    }
-                }
-                // clamp between 0 and fuel remaining.
-                fire =  _.clamp((fire+transmissionProbability),0,_.min([1,fuel/fuelMultipler]))
-                // round it so we don't deal with tiny fractions
-                fire = _.round(fire,2)
-
-                console.assert(fire!=undefined)
-                console.assert(fire!=null)
-                console.assert(fuel!=undefined)
-
-                this.data.set(x,y,0,fire/fireMultiplier)
-                this.data.set(x,y,1,fuel/fuelMultipler)
-                this.data.set(x,y,2,ash)
-            }
-        }
-
-        var t = new Date().getTime()-t0
-        console.log('tick',this.clock,'time',t)
-        return t
-
-
-    }
-
-    /** push data onto canvases */
-    display(){
-        var H = this.W;
-        var W = this.H;
-
-        // first show fire
-
-        // Fill in the fire layer
-        var canvas = document.getElementById('fire')
-        var ctx = canvas.getContext('2d');
-        var imageData = ctx.getImageData(0,0,H,W)
-        var color_scale = d3.interpolateLab('yellow','red')
-        var fire = this.data.slice(null,null,[0,1])
-        for (var x = 0; x < imageData.width; x++) {
-            for (var y = 0; y < imageData.height; y++) {
-                var d = fire.get(x,y,0)*2
-                var c = new d3.color(color_scale(d))
-                var i = (x*H+y)*4
-                imageData.data[i+0]=c.r
-                imageData.data[i+1]=c.g
-                imageData.data[i+2]=c.b
-                imageData.data[i+3]=_.clamp(d*255*2,0,255)
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-        console.assert(this.data.selection.data.length==imageData.data.length)
-
-        // Fill in the fire layer
-        var canvas = document.getElementById('fuel')
-        var ctx = canvas.getContext('2d');
-        var imageData = ctx.getImageData(0,0,H,W)
-        var color_scale = d3.interpolateLab('white','green')
-        var fuel = this.data.slice(null,null,[1,2])
-        for (var x = 0; x < imageData.width; x++) {
-            for (var y = 0; y < imageData.height; y++) {
-                var d = fuel.get(x,y,0)*2
-                var c = new d3.color(color_scale(d))
-                var i = (x*H+y)*4
-                imageData.data[i+0]=c.r
-                imageData.data[i+1]=c.g
-                imageData.data[i+2]=c.b
-                imageData.data[i+3]=_.clamp(d*255*2,0,255)
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-        console.assert(this.data.selection.data.length==imageData.data.length)
-
-
-        // Fill in the ash layer
-        var canvas = document.getElementById('ash')
-        var ctx = canvas.getContext('2d');
-        var imageData = ctx.getImageData(0,0,H,W)
-        var color_scale = d3.interpolateLab('white','grey')
-        var ash = this.data.slice(null,null,[2,3])
-        for (var x = 0; x < imageData.width; x++) {
-            for (var y = 0; y < imageData.height; y++) {
-                var d = ash.get(x,y,0)*2
-                var c = new d3.color(color_scale(d))
-                var i = (x*H+y)*4
-                imageData.data[i+0]=c.r
-                imageData.data[i+1]=c.g
-                imageData.data[i+2]=c.b
-                imageData.data[i+3]=_.clamp(d*255*2,0,255)
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-        console.assert(this.data.selection.data.length==imageData.data.length)
-
-    }
-    /** this returns stats **/
-    stats(){
-        var fire = this.data.slice(null,null,[0,1])
-        var burning_cells = 0
-        for (var x = 1; x < this.W-1; x++) {
-            for (var y = 1; y < this.H-1; y++) {
-                if (fire.get(x,y,0)!=0) burning_cells++
-            }
-        }
-        return {
-            fire: _.round(fire.sum(),2),
-            fuel: _.round(this.data.slice(null,null,[1,2]).sum(),2),
-            ash: _.round(this.data.slice(null,null,[2,3]).sum(),2),
-            burning_cells:burning_cells
-        }
-    }
-    start(n=2000, callback){
-        this.stop()
-        this.loop = setInterval(()=>{
-            this.tick()
-            this.display()
-            if (callback) callback()
-        },n)
-    }
-    stop(){
-        if (this.loop) clearInterval(this.loop)
-    }
-}
+  $(document).ready(function() {
+    $(".js-example-basic-single").select2();
+  });
 
 
 </script>
-<style media="screen">
-    .leaflet-image-layer {
-        image-rendering: pixelated
-    }
-</style>
-    <script src="images/bridagadoon_20170429-065415_3857_60/metadata.js"></script>
+
     <script type="text/javascript">
     // parameters
     var simulation
@@ -454,7 +234,7 @@ class Simulation {
     }
 
     // load image into canvases
-    window.onload = function() {
+    $(document).ready(function() {
 
         /* leaflet setup */
         var southWest = L.latLng(metadata.bounds[0][0],metadata.bounds[0][1]),
@@ -483,6 +263,11 @@ class Simulation {
             bounds,
             {opacity:0.5, interactive:true}
         )
+        var response_layer = new L.ImageOverlay(
+            canvas.toDataURL(),
+            bounds,
+            {opacity:0.5, interactive:true}
+        )
 
         L.mapbox.accessToken = 'pk.eyJ1IjoiZGlnaXRhbGdsb2JlIiwiYSI6ImNpc2t0ZG16NzA2Y2QydW53M2s0c2liNncifQ.YzEK6kmdCrtvssUfrncwKQ';
         var base = L.mapbox.tileLayer('digitalglobe.nal0g75k')
@@ -495,7 +280,7 @@ class Simulation {
             // zoomControl: true,
             maxZoom:16,
             minZoom:4,
-            layers: [base,ash_layer,fire_layer]
+            layers: [base,ash_layer,fire_layer,response_layer]
         })
         baseLayers = {
             'DigitalGlobe Maps API: Recent Imagery':base
@@ -504,7 +289,8 @@ class Simulation {
             'fire_layer':fire_layer,
             'ash_layer':ash_layer,
             'fuel_layer':fuel_layer,
-            'elevation_layer':elevation_layer
+            'elevation_layer':elevation_layer,
+            'response_layer':response_layer
         }
         L.control.layers(baseLayers, overlays, {collapsed: true}).addTo(leafletMap);
         L.control.scale().addTo(leafletMap);
@@ -515,12 +301,14 @@ class Simulation {
             if (fuel_layer._image) fuel_layer.setUrl(document.getElementById('fuel').toDataURL())
             if (ash_layer._image) ash_layer.setUrl(document.getElementById('ash').toDataURL())
             if (fire_layer._image) fire_layer.setUrl(document.getElementById('fire').toDataURL())
+            if (response_layer._image) response_layer.setUrl(document.getElementById('response').toDataURL())
+
             // fire_layer.bringToFront()
         }
         leafletMap.on('overlayadd',updateLayers)
         // fire_layer.on('click',(e)=>simulation.ignite(e))
-        fire_layer.on('dblclick',(e)=>{simulation.ignite(e);updateLayers()})
         leafletMap.on('click',(e)=>{simulation.ignite(e);updateLayers()})
+        leafletMap.on('dblclick',(e)=>{simulation.respond(e);updateLayers()})
 
         /* start simulation */
 
@@ -538,6 +326,7 @@ class Simulation {
             ctx.drawImage(this, 0, 0);
         }
 
+        // load images
         var canvas=document.getElementById('fire');
         var prom = Promise.all([
             loadImage(fuel_src),
@@ -547,22 +336,22 @@ class Simulation {
 
         prom.then(([fuel,elev]) => {
 
-            // convert to float 32?
+            // convert to float 32
             fuel.dtype="float32"
+            elev.dtype="float32"
+
+            // scale fuel to 0-1 instead of pngs 0-255
             fuel=fuel.multiply(1/255)
 
             // HACK for some reason it's read inverted and this is a fix ??
             // should fix this in the notebook
             fuel= fuel.subtract(1).multiply(-1)
 
-            elev.dtype="float32"
-            elev= elev.subtract(elev.max()).multiply(-1)
-
-
 
             // crop to smallest
             var canvas=document.getElementById('fire');
 
+            // init simulation
             simulation = new Simulation(
                 canvas,
                 {
@@ -571,12 +360,7 @@ class Simulation {
                 }
             );
 
-
-            // start simulation
-
-
-
-
+            /* button hooks */
             document.getElementById('start').onclick=function(){
                 simulation.start(5000, ()=>updateLayers())
             }
@@ -609,7 +393,7 @@ class Simulation {
 
 
 
-    };
+    })
 
     </script>
 </html>
