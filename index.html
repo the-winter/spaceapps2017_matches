@@ -32,13 +32,24 @@
 
                 </div>
               </div>
-              <div class="col-sm-3">
+                <div class="col-sm-3">
+                <div class="buttons-roup">
+                    <!-- Move me -->
+                    <label class="radio-inline">
+                      <input type="radio" name="click-radio" id="click-radio-1" value="ignite" checked></input> ignite
+                      <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="click-radio" id="click-radio-2" value="respond"> </input> firemen
+                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    </label>
 
+                </div>
+                </div>
+                <div class="col-sm-4">
+                    <button class="pull-right">Register Burn</button>
+                </div>
               </div>
-              <div class="col-sm-4">
-                <button class="pull-right">Register Burn</button>
-              </div>
-            </div>
 
             <div class="row">
               <div class="col-sm-2">
@@ -141,6 +152,7 @@
                       <input for="amount" oninput="amount.value=rangeInput.value" id="slider" type="range" min="0" max="240" name="rangeInput" disabled="disabled" value="0" />
                       Hours: <input oninput="rangeInput.value=amount.value" id= "slider-box" class="hours-box" type="text" value="0" name="amount" for="rangeInput" disabled="disabled" oninput="rangeInput.value=amount.value" />
                     </div>
+
                   </form>
                   <div id="canvases">
                     <!-- Hiden canvases used to generate rasters for leaflet, can be used for debugging -->
@@ -321,11 +333,24 @@
             // fire_layer.bringToFront()
         }
         leafletMap.on('overlayadd',updateLayers)
-        // fire_layer.on('click',(e)=>simulation.ignite(e))
-        leafletMap.on('click',(e)=>{simulation.ignite(e);updateLayers()})
-        leafletMap.on('dblclick',(e)=>{simulation.respond(e);updateLayers()})
+        var click_timeout = false
 
-        /* start simulation */
+        leafletMap.on('click',(e)=>{
+            var clickRadio = $('[name=click-radio]:checked').val()
+            if (clickRadio=='respond'){
+                simulation.respond(e)
+                simulation.display()
+                updateLayers()
+            }
+            else {
+                simulation.ignite(e)
+                simulation.display()
+                updateLayers()
+            }
+
+        })
+
+
 
         // load elevation onto a canvas
         var canvas=document.getElementById('elevation');

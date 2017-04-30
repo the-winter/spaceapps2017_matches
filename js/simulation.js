@@ -16,6 +16,7 @@ class Simulation {
 
         this.responses = [] // locations of responses
         this.max_responses = 2
+        this.fireman_strength = 0.2
 
         // var coords = this.ignite()
         this.display();
@@ -60,7 +61,8 @@ class Simulation {
 
     /* respond with a fire suppresson asset */
     respond(e){
-        // TODO limite fire engine locations
+
+
         // get location of click
         var x = -(e.latlng.lat-metadata.bounds[1][0])/(metadata.bounds[1][0]-metadata.bounds[0][0])*this.H
         var y = (e.latlng.lng-metadata.bounds[0][1])/(metadata.bounds[1][1]-metadata.bounds[0][1])*this.W
@@ -69,7 +71,7 @@ class Simulation {
         console.log('response',x,y)
 
         this.responses.push([x,y])
-        this.responses=this.responses.slice(this.max_responses) // keep the last few
+        this.responses=this.responses.slice(-this.max_responses) // keep the last few
 
         //clear data
         for (var x = 0; x < this.W; x++) {
@@ -80,8 +82,9 @@ class Simulation {
 
         //reapply resposnes
         for (var i = 0; i < this.responses.length; i++) {
-            x,y = this.responses[i]
-            this.data.set(x,y,4,0.5)
+            x = this.responses[i][0]
+            y = this.responses[i][1]
+            this.data.set(x,y,4,this.fireman_strength)
         }
     }
 
@@ -119,7 +122,7 @@ class Simulation {
          *  $ theta ~= dh/w $ using the small tan approximation
          *
          *  giving the total equation
-         *  $ t = I * exp(0.069 *dh/w) $
+         *  $ t = I * exp(0.069 *dh/w)  $
          *
          * (from Noble et al 1980, DOI: 10.1111/j.1442-9993.1980.tb01243.x)
          */
@@ -271,7 +274,7 @@ class Simulation {
         var response = this.data.slice(null,null,[4,5])
         for (var x = 0; x < imageData.width; x++) {
             for (var y = 0; y < imageData.height; y++) {
-                var d = response.get(x,y,0)*2
+                var d = response.get(x,y,0)*2/this.fireman_strength
                 var c = new d3.color(color_scale(d))
                 var i = (x*H+y)*4
                 imageData.data[i+0]=c.r
