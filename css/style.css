@@ -3,6 +3,12 @@
   padding-top: 10px;
 }
 
+.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid #eee;
+}
+
 .div-padding: {
   padding: 0;
 }
@@ -44,7 +50,7 @@ input.sidebar-input {
 .slider-div {
     position: absolute;
     z-index: 1;
-    margin-left: 350px;
+    margin-left: 450px;
     margin-top: 20px;
     color: white;
 }
@@ -75,6 +81,19 @@ input.sidebar-input {
   width:30px;
   display:inline;
 
+}
+
+/** About Section **/
+
+.how-it-works {
+  border-bottom: 2px solid #eee;
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+footer {
+  color: grey;
+  padding: 10px 0px 15px 20px;
 }
 
 /* pixelate the fire */
