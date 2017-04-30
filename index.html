@@ -14,11 +14,20 @@
 
           <div class="container">
             <div class="row">
-              <div class="col-sm-10 col-sm-offset-2">
+                <div class="col-sm-2">
+                    <!-- <div class="row"> -->
+                        <!-- <div class="col-sm-4 col-sm-offset-4"> -->
+                            <img class="img img-responsive center-block" src="images/icon.png" style="padding: 2em" width="70%"/>
+                        <!-- </div> -->
+
+                    <!-- </div> -->
+
+                </div>
+              <div class="col-sm-10">
 
                 <div class="page-header">
-                  <h1>Bushfire Simulator </h1>
-                  <h3>A spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></h3>
+                  <h1>Bushfire Simulator
+                  <small>A Spaceapps2017 <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> by team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a></small></h1>
                 </div>
               </div>
             </div>
@@ -175,7 +184,11 @@
               <div class="col-sm-10 col-sm-offset-2">
                 <div class="how-it-works">
                     <h2>About</h2>
-                    Made by <a href="https://github.com/JaycobC">Jaycob</a>, <a href="https://github.com/the-winter">Ivana</a>, <a href="https://github.com/wassname">Mike</a>, and <a href="https://github.com/nicolaruprecht">Nicola</a>. A project for <a href="https://github.com/the-winter/spaceapps2017_matches">spaceapps2017 in Perth</a>.
+
+                  Bush fires cause pervasive harm to our communities - they result in damage to wildlife, property, economies, and worst of all, loss of life. Our application simulates bush fires using NASA data about the environment to identify preventative actions that reduce harm to the community . </p>
+
+                   A <a href="https://2017.spaceappschallenge.org/">NASA Spaceapp2017</a> <a href="https://github.com/the-winter/spaceapps2017_matches">project</a> made by <a href="https://github.com/JaycobC">Jaycob</a>, <a href="https://github.com/the-winter">Ivana</a>, <a href="https://github.com/wassname">Mike</a>, and <a href="https://github.com/nicolaruprecht">Nicola</a> in Perth (team <a href="https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream">Matches</a>).
+
                     <h2>Instructions</h2>
                     <ul>
                         <li>Click to light a fire</li>
@@ -188,7 +201,7 @@
 
                     The fire burns fuel (<em>f</em>) which is taken from an estimate of vegetation. This is provided by <a href="https://explorer.earthengine.google.com/#detail/LANDSAT%2FLC8_L1T_ANNUAL_EVI"> an EVI index derived from NASA's Landsat-8 images</a>. Fire spreads uphill easily but struggles to spread downhill so we take into account elevation by using <a href="https://explorer.earthengine.google.com/#detail/USGS%2FSRTMGL1_003"> 30m resolution SRTM Digital elevation data</a>.<p/>
 
-                    The equation which described the fires change to ignite a nearby tile is adapted from <a href="https://www.researchgate.net/publication/229624147_McArthur's_fire-danger_meters_expressed_as_equations"> Noble et al 1980</a>.
+                    The equation which describes the fires chance to ignite a nearby tile is adapted from <a href="https://www.researchgate.net/publication/229624147_McArthur's_fire-danger_meters_expressed_as_equations"> Noble et al 1980</a>.
                     <pre>
                        T = I * W^2 * exp(0.069 *atan(dh/w)) * (FDI + 0.024 * V * cos(theta))
                         ~= I * W^2 * exp(0.069 *dh/w) * (FDI + 0.024 * V * cos(theta))
@@ -245,6 +258,7 @@
     var simulation
     var fuel_src = 'images/bridagadoon_20170429-065415_3857_60/2017.EVI.png'
     var elevation_src = 'images/bridagadoon_20170429-065415_3857_60/SRTMGL1_003.elevation_pixel_units.png'
+    var working = false
 
     /**
      * Load png images as an array pf [r,g,b,a,r1,g1,b1,a1,...]

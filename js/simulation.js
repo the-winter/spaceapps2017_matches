@@ -306,9 +306,13 @@ class Simulation {
     start(n=2000, callback){
         this.stop()
         this.loop = setInterval(()=>{
+            if (working) return // avoid a queue that freezes the screen
+            working=true
             this.tick()
             this.display()
+            working=false
             if (callback) callback()
+
         },n)
     }
     stop(){
