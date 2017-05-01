@@ -1,6 +1,9 @@
 # About
 
-A bushfire risk simulation using satellite images. Try it at [the-winter.github.io/spaceapps2017_matches](https://the-winter.github.io/spaceapps2017_matches)
+A bushfire risk simulation using satellite images, you can try it:
+- [https://the-winter.github.io/spaceapps2017_matches](https://the-winter.github.io/spaceapps2017_matches).
+
+![](images/simulation.gif)
 
 # Authors
 
