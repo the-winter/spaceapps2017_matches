@@ -1,3 +1,104 @@
 #myCanvas {
   width: 100%;
+  padding-top: 10px;
 }
+
+.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.div-padding: {
+  padding: 0;
+}
+
+/** Buttons **/
+button#start {
+    background-color: lime;
+}
+
+button#stop {
+    background-color: red;
+}
+
+/** Silder **/
+
+.hours-box {
+  border: none;
+  width: 2em;
+  background-color: transparent;
+}
+
+.btn {
+  padding: 2px 5px;
+}
+
+label {
+  font-size: 10px;
+  margin-left: -10px;
+}
+
+input.sidebar-input {
+  font-size: 10px;
+  width:30px;
+  display:inline;
+}
+
+/** absolute divs **/
+
+.slider-div {
+    position: absolute;
+    z-index: 1;
+    margin-left: 450px;
+    margin-top: 20px;
+    color: white;
+}
+
+.location-input {
+  position: absolute;
+  margin-left: 50px;
+  margin-top: 20px;
+  z-index: 1;
+  width: 30%;
+}
+
+.checkbox-list {
+  font-size: 10px;
+}
+
+.btn {
+  padding: 2px 5px;
+}
+
+label {
+  font-size: 10px;
+  margin-left: -10px;
+}
+
+input.sidebar-input {
+  font-size: 10px;
+  width:30px;
+  display:inline;
+
+}
+
+/** About Section **/
+
+.how-it-works {
+  border-bottom: 2px solid #eee;
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+footer {
+  color: grey;
+  padding: 10px 0px 15px 20px;
+}
+
+/* pixelate the fire */
+.leaflet-image-layer {
+    image-rendering: pixelated
+}
+/* hide canvases we use for background rendering */
+.overlay {position:absolute;width: 50%; opacity:0}
