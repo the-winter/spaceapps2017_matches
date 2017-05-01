@@ -33,8 +33,7 @@ Our vision for future UI and feature development is shown here.
 # Instructions
 
 - Click to light a fire
-- Double click to place a fire engine
-- Click to light a fire
+- click the fireman button to add firemen
 - press start to step the simulation
 
 # How it works
