@@ -7,7 +7,7 @@ A bushfire risk simulation using satellite images, you can try it:
 
 # Authors
 
-A [NASA Spaceapp2017](https://2017.spaceappschallenge.org/) project made by [Jaycob](https://github.com/JaycobC), [Ivana](https://github.com/the-winter), [Mike](https://github.com/wassname), and [Nicola](https://github.com/nicolaruprecht) in Perth (team [Matches)](https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream).
+A [NASA Spaceapp2017](https://2017.spaceappschallenge.org/) project made by [Jaycob](https://github.com/JaycobC), [the-winter](https://github.com/the-winter), [Mike](https://github.com/wassname), and [Nicola](https://github.com/nicolaruprecht) in Perth (team [Matches)](https://2017.spaceappschallenge.org/challenges/warning-danger-ahead/and-you-can-help-fight-fires/teams/matches/stream).
 
 ## Problem
 
